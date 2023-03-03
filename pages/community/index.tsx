@@ -1,14 +1,14 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import FloatingButton from "../../components/floating-button";
-import Layout from "../../components/layout";
+import FloatingButton from "@components/floating-button";
+import Layout from "@components/layout";
 
 const Community: NextPage = () => {
   return (
     <Layout hasTabBar title="동네생활">
       <div className="space-y-4 divide-y-[2px]">
         {[1, 2, 3, 4, 5, 6].map((_, i) => (
-          <Link key={i} href={`/community/${i}`}>
+          <Link legacyBehavior key={i} href={`/community/${i}`}>
             <a className="flex cursor-pointer flex-col pt-4 items-start">
               <span className="flex ml-4 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                 동네질문
