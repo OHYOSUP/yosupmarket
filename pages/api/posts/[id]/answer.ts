@@ -7,20 +7,37 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  
-  const profile = await client.user.findUnique({
-    where: { id: req.session.user?.id },
-  });
+  const {
+    query: { id },
+    session: { user },
+    body: { answer },
+  } = req;
 
+  const newAnswer = await client.answer.create({
+    data: {
+      user: {
+        connect: {
+          id: user?.id,
+        },
+      },
+      post: {
+        connect: {
+          id: Number(id)
+        },
+      },
+      answer,
+    },
+  });
+  console.log(newAnswer);
   res.json({
     ok: true,
-    profile,
+    answer: newAnswer,
   });
 }
 
 export default withApiSession(
   withHandler({
-    methods: ["GET"],
+    methods: ["POST"],
     handler,
   })
 );

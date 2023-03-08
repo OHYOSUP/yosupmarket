@@ -1,10 +1,11 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "@components/button";
 import Input from "@components/input";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
+import { useRouter } from "next/router";
 
 interface EnterForm {
   email?: string;
@@ -21,8 +22,7 @@ interface MutationResult {
 }
 
 const Enter: NextPage = () => {
-  const [enter, { loading, data, error }] =
-    useMutation<MutationResult>("/api/users/enter");
+  const [enter, { data }] = useMutation<MutationResult>("/api/users/enter");
   const [
     confirmToken,
     { loading: toeknLoading, data: tokenData, error: toeknError },
@@ -46,9 +46,20 @@ const Enter: NextPage = () => {
   };
 
   const onTokenValid = (vaildForm: TokenForm) => {
-    if(toeknLoading) return;
+    if (toeknLoading) return;
     confirmToken(vaildForm);
   };
+
+  const router = useRouter();
+
+  //? router push 와 replace의 차이점
+  // push는 redirect로 브라우저에 사용자가 접근했던 기록이 남는다.
+  // replace는 브라우저에서 접근하려고 했던 페이지가 아예 없던것 거철 보이게 만들어준다. 한마디로 기록이 안남는것.
+  useEffect(() => {
+    if (tokenData?.ok) {
+      router.replace("/");
+    }
+  }, [tokenData, router]);
 
   return (
     <div className="mt-16 px-4">
@@ -71,7 +82,18 @@ const Enter: NextPage = () => {
                 required
               />
             ) : null}
-
+            {method === "email" ? (
+              <Input
+                register={tokenRegister("token", {
+                  required: true,
+                })}
+                name="token"
+                label="Confirmation Token"
+                type="number"
+                kind="text"
+                required
+              />
+            ) : null}
             <Button text={sumbitting ? "toeknLoading" : "Confirm Token"} />
           </form>
         ) : (
