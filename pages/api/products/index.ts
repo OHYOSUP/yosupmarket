@@ -9,10 +9,10 @@ async function handler(
 ) {
   if (req.method === "GET") {
     const products = await client.product.findMany({
-      include:{
-        _count:{
-          select:{
-            favs:true,
+      include: {
+        _count: {
+          select: {
+            favs: true,
           }
         }
       }
@@ -44,7 +44,7 @@ async function handler(
   const profile = await client.user.findUnique({
     where: { id: req.session.user?.id },
   });
- 
+
   res.json({
     ok: true,
     product,

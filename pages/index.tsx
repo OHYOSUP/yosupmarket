@@ -7,7 +7,7 @@ import Head from "next/head";
 import useSWR from "swr";
 import { Product, User } from "@prisma/client";
 
-interface ProductWithUser extends Product {
+export interface ProductWithCount extends Product {
   _count: {
     favs: number;
   }
@@ -15,7 +15,7 @@ interface ProductWithUser extends Product {
 
 interface productsResponse{
   ok: boolean;
-  products: ProductWithUser[];
+  products: ProductWithCount[];
 }
 
 const Home: NextPage = () => {

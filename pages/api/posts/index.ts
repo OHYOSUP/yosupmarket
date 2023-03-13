@@ -43,41 +43,41 @@ async function handler(
       const parsedLatitude = parseFloat(latitude.toString());
       const parsedLongitue = parseFloat(longitude.toString());
 
-    const posts = await client.post.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            avatar: true,
+      const posts = await client.post.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+          _count: {
+            select: {
+              wondering: true,
+              answers: true,
+            },
           },
         },
-        _count: {
-          select: {
-            wondering: true,
-            answers: true,
+        where: {
+          latitude: {
+            gte: parsedLatitude - 0.01,
+            lte: parsedLongitue + 0.01,
+          },
+          longitude: {
+            gte: parsedLatitude - 0.01,
+            lte: parsedLongitue + 0.01,
           },
         },
-      },
-      where: {
-        latitude: {
-          gte: parsedLatitude - 0.01,
-          lte: parsedLongitue + 0.01,
-        },
-        longitude: {
-          gte: parsedLatitude - 0.01,
-          lte: parsedLongitue + 0.01,
-        },
-      },
-      
-    });
-    
-    res.json({
-      ok: true,
-      posts,
-    });
+
+      });
+
+      res.json({
+        ok: true,
+        posts,
+      });
+    }
   }
-}
 }
 
 export default withApiSession(
